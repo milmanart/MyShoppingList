@@ -164,18 +164,16 @@ export default function HomeScreen({ navigation }) {
                 </TouchableOpacity>
                 <View style={styles.cardButtons}>
                   <TouchableOpacity
-                    style={styles.editButton}
-                    onPress={() =>
-                      navigation.navigate('Edit', { product: item, theme: isDarkMode })
-                    }
+                    style={[styles.actionIconButton, { backgroundColor: '#4caf50' }]}
+                    onPress={() => toggleProductStatus(item.id)}
                   >
-                    <Text style={styles.editButtonText}>Edytuj</Text>
+                    <FontAwesome name="check" size={16} color="#fff" />
                   </TouchableOpacity>
                   <TouchableOpacity
-                    style={styles.deleteButton}
+                    style={[styles.actionIconButton, { backgroundColor: '#ff4d4d' }]}
                     onPress={() => deleteProduct(item.id)}
                   >
-                    <Text style={styles.deleteButtonText}>Usuń</Text>
+                    <FontAwesome name="trash" size={16} color="#fff" />
                   </TouchableOpacity>
                 </View>
               </View>

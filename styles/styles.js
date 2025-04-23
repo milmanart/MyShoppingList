@@ -129,6 +129,14 @@ export default StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold'
   },
+  actionIconButton: {
+    width: 36,
+    height: 36,
+    borderRadius: 4,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginHorizontal: 4
+  },
   fabPosition: {
     position: 'absolute',
     bottom: 15,
@@ -348,6 +356,14 @@ export default StyleSheet.create({
   detailsValue: {
     fontSize: 16,
     flex: 1
+  },
+  detailsDescription: {
+    padding: 12,
+    borderWidth: 1,
+    borderRadius: 8,
+    marginTop: 4,
+    marginBottom: 16,
+    minHeight: 80
   },
   statusBadge: {
     paddingHorizontal: 12,

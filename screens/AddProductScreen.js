@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, Alert } from 'react-native'
+import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, Alert, ScrollView } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import AddButton from '../components/AddButton'
 import CloseButton from '../components/CloseButton'
@@ -10,6 +10,7 @@ export default function AddProductScreen({ route, navigation }) {
   const [name, setName] = useState('')
   const [price, setPrice] = useState('')
   const [store, setStore] = useState('')
+  const [description, setDescription] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [formErrors, setFormErrors] = useState({})
@@ -39,7 +40,14 @@ export default function AddProductScreen({ route, navigation }) {
       const pr = parseFloat(price)
       const final = isNaN(pr) ? 'NaN' : pr  // u0418u0437u043cu0435u043du0435u043du043e u0441 0 u043du0430 'NaN': pr  // u0418u0437u043cu0435u043du0435u043du043e u0441 0 u043du0430 'NaN'
       const all = JSON.parse((await AsyncStorage.getItem('products')) || '[]')
-      const newP = { id: Date.now().toString(), name, price: final, store, purchased: false }
+      const newP = { 
+        id: Date.now().toString(), 
+        name, 
+        price: final, 
+        store, 
+        description: description.trim() || 'Brak opisu', 
+        purchased: false 
+      }
       await AsyncStorage.setItem('products', JSON.stringify([newP, ...all]))
       navigation.goBack()
     } catch (err) {
@@ -58,69 +66,86 @@ export default function AddProductScreen({ route, navigation }) {
     <View style={[styles.container, { backgroundColor: bg }]}>
       <View style={styles.modalWrapper}>
         <CloseButton onPress={() => navigation.goBack()} />
-        <View style={[styles.modalContainer, { backgroundColor: inpBg }]}>
-          <Text style={[styles.modalTitle, { color: fg }]}>Dodaj produkt</Text>
-          
-          {error && (
-            <View style={styles.errorContainer}>
-              <Text style={styles.errorText}>{error}</Text>
-              <TouchableOpacity style={styles.retryButton} onPress={() => setError(null)}>
-                <Text style={styles.retryButtonText}>u0417u0430u043au0440u044bu0442u044c</Text>
+        <ScrollView style={{width: '100%'}}>
+          <View style={[styles.modalContainer, { backgroundColor: inpBg }]}>
+            <Text style={[styles.modalTitle, { color: fg }]}>Dodaj produkt</Text>
+            
+            {error && (
+              <View style={styles.errorContainer}>
+                <Text style={styles.errorText}>{error}</Text>
+                <TouchableOpacity style={styles.retryButton} onPress={() => setError(null)}>
+                  <Text style={styles.retryButtonText}>Zamknij</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+            
+            <View style={styles.inputRow}>
+              {formErrors.name && <Text style={styles.formError}>{formErrors.name}</Text>}
+              <TextInput
+                style={[styles.modalInput, { flex: 1, color: fg }]}
+                placeholder="Nazwa produktu"
+                placeholderTextColor={ph}
+                value={name}
+                onChangeText={setName}
+              />
+              <TouchableOpacity onPress={() => setName('')}>
+                <Text style={{ fontSize: 20, marginLeft: 6, color: 'red' }}>X</Text>
               </TouchableOpacity>
             </View>
-          )}
-          
-          <View style={styles.inputRow}>
-            {formErrors.name && <Text style={styles.formError}>{formErrors.name}</Text>}
-            <TextInput
-              style={[styles.modalInput, { flex: 1, color: fg }]}
-              placeholder="Nazwa produktu"
-              placeholderTextColor={ph}
-              value={name}
-              onChangeText={setName}
-            />
-            <TouchableOpacity onPress={() => setName('')}>
-              <Text style={{ fontSize: 20, marginLeft: 6, color: 'red' }}>X</Text>
-            </TouchableOpacity>
+            
+            <View style={styles.inputRow}>
+              {formErrors.price && <Text style={styles.formError}>{formErrors.price}</Text>}
+              <TextInput
+                style={[styles.modalInput, { flex: 1, color: fg }]}
+                placeholder="Cena"
+                placeholderTextColor={ph}
+                keyboardType="numeric"
+                value={price}
+                onChangeText={setPrice}
+              />
+              <TouchableOpacity onPress={() => setPrice('')}>
+                <Text style={{ fontSize: 20, marginLeft: 6, color: 'red' }}>X</Text>
+              </TouchableOpacity>
+            </View>
+            
+            <View style={styles.inputRow}>
+              {formErrors.store && <Text style={styles.formError}>{formErrors.store}</Text>}
+              <TextInput
+                style={[styles.modalInput, { flex: 1, color: fg }]}
+                placeholder="Sklep"
+                placeholderTextColor={ph}
+                value={store}
+                onChangeText={setStore}
+              />
+              <TouchableOpacity onPress={() => setStore('')}>
+                <Text style={{ fontSize: 20, marginLeft: 6, color: 'red' }}>X</Text>
+              </TouchableOpacity>
+            </View>
+            
+            <View style={styles.inputRow}>
+              <TextInput
+                style={[styles.modalInput, { flex: 1, color: fg, height: 100, textAlignVertical: 'top' }]}
+                placeholder="Opis produktu"
+                placeholderTextColor={ph}
+                value={description}
+                onChangeText={setDescription}
+                multiline={true}
+                numberOfLines={4}
+              />
+              <TouchableOpacity onPress={() => setDescription('')}>
+                <Text style={{ fontSize: 20, marginLeft: 6, color: 'red' }}>X</Text>
+              </TouchableOpacity>
+            </View>
+            
+            <View style={styles.modalButtons}>
+              {loading ? (
+                <ActivityIndicator size="large" color="#0080ff" />
+              ) : (
+                <AddButton onPress={add} />
+              )}
+            </View>
           </View>
-          
-          <View style={styles.inputRow}>
-            {formErrors.price && <Text style={styles.formError}>{formErrors.price}</Text>}
-            <TextInput
-              style={[styles.modalInput, { flex: 1, color: fg }]}
-              placeholder="Cena"
-              placeholderTextColor={ph}
-              keyboardType="numeric"
-              value={price}
-              onChangeText={setPrice}
-            />
-            <TouchableOpacity onPress={() => setPrice('')}>
-              <Text style={{ fontSize: 20, marginLeft: 6, color: 'red' }}>X</Text>
-            </TouchableOpacity>
-          </View>
-          
-          <View style={styles.inputRow}>
-            {formErrors.store && <Text style={styles.formError}>{formErrors.store}</Text>}
-            <TextInput
-              style={[styles.modalInput, { flex: 1, color: fg }]}
-              placeholder="Sklep"
-              placeholderTextColor={ph}
-              value={store}
-              onChangeText={setStore}
-            />
-            <TouchableOpacity onPress={() => setStore('')}>
-              <Text style={{ fontSize: 20, marginLeft: 6, color: 'red' }}>X</Text>
-            </TouchableOpacity>
-          </View>
-          
-          <View style={styles.modalButtons}>
-            {loading ? (
-              <ActivityIndicator size="large" color="#0080ff" />
-            ) : (
-              <AddButton onPress={add} />
-            )}
-          </View>
-        </View>
+        </ScrollView>
       </View>
     </View>
   )

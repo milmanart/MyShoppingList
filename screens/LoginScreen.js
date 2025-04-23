@@ -27,7 +27,7 @@ export default function LoginScreen({ navigation }) {
       <View style={[styles.loginForm, { backgroundColor: isDarkMode ? '#444' : '#fff' }]}>
         <TextInput
           style={[styles.loginInput, { color: isDarkMode ? '#fff' : '#000' }]}
-          placeholder="Nazwa użytkownika"
+          placeholder="Email"
           placeholderTextColor={isDarkMode ? '#ccc' : '#888'}
           value={username}
           onChangeText={setUsername}
