@@ -11,7 +11,7 @@ export default function ProductDetailsScreen({ route, navigation }) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 
-  // Функция для загрузки актуальных данных о продукте
+
   const loadProductData = async () => {
     try {
       const allProducts = JSON.parse((await AsyncStorage.getItem('products')) || '[]')
@@ -24,7 +24,7 @@ export default function ProductDetailsScreen({ route, navigation }) {
     }
   }
 
-  // Обновляем данные при каждом фокусе на экране
+
   useFocusEffect(
     React.useCallback(() => {
       loadProductData()
@@ -32,7 +32,7 @@ export default function ProductDetailsScreen({ route, navigation }) {
     }, [initialProduct.id])
   )
 
-  // Функция для удаления продукта
+
   const deleteProduct = async () => {
     Alert.alert(
       'Potwierdzenie usunięcia',
@@ -62,7 +62,7 @@ export default function ProductDetailsScreen({ route, navigation }) {
     )
   }
 
-  // Функция для изменения статуса продукта (куплено/не куплено)
+
   const togglePurchaseStatus = async () => {
     setLoading(true)
     setError(null)
@@ -73,7 +73,6 @@ export default function ProductDetailsScreen({ route, navigation }) {
         p.id === product.id ? { ...p, purchased: !p.purchased } : p
       )
       await AsyncStorage.setItem('products', JSON.stringify(updatedProducts))
-      // Обновляем локальный объект продукта для отображения изменений
       setProduct({ ...product, purchased: !product.purchased })
       setLoading(false)
     } catch (err) {
@@ -83,7 +82,7 @@ export default function ProductDetailsScreen({ route, navigation }) {
     }
   }
 
-  // Определение цветов в зависимости от темы
+
   const bg = theme ? '#333' : '#f2f2f2'
   const fg = theme ? '#fff' : '#000'
   const cardBg = theme ? '#444' : '#fff'
@@ -91,7 +90,7 @@ export default function ProductDetailsScreen({ route, navigation }) {
 
   return (
     <View style={[styles.container, { backgroundColor: bg }]}>
-      {/* Заголовок с кнопкой возврата */}
+      
       <View style={styles.headerContainer}>
         <CloseButton onPress={() => navigation.goBack()} />
         <Text style={[styles.title, { color: fg }]}>Szczegóły produktu</Text>
@@ -113,7 +112,6 @@ export default function ProductDetailsScreen({ route, navigation }) {
       ) : (
         <View style={styles.modalWrapper}>
           <ScrollView style={{width: '100%'}}>
-            {/* Отображение информации о продукте */}
             <View style={[styles.detailsContainer, theme && { backgroundColor: cardBg }]}>
               <Text style={[styles.detailsTitle, { color: fg }]}>{product.name}</Text>
               
@@ -148,7 +146,7 @@ export default function ProductDetailsScreen({ route, navigation }) {
               </View>
             </View>
 
-            {/* Кнопки действий */}
+          
             <View style={styles.actionButtonsContainer}>
               <TouchableOpacity 
                 style={[styles.actionButton, { backgroundColor: '#0080ff' }]}

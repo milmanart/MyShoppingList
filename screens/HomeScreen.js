@@ -34,7 +34,7 @@ export default function HomeScreen({ navigation }) {
         const theme = await AsyncStorage.getItem('theme')
         if (theme) setIsDarkMode(JSON.parse(theme))
       } catch (err) {
-        console.error('Ошибка при загрузке темы:', err)
+        console.error('Error loading theme:', err)
       }
     }
     loadTheme()
@@ -48,8 +48,8 @@ export default function HomeScreen({ navigation }) {
       if (j) setProducts(JSON.parse(j))
       setLoading(false)
     } catch (err) {
-      console.error('Ошибка при загрузке продуктов:', err)
-      setError('Не удалось загрузить список продуктов. Пожалуйста, попробуйте снова.')
+      console.error('Error loading products:', err)
+      setError('Failed to load product list. Please try again.')
       setLoading(false)
     }
   }
@@ -63,8 +63,8 @@ export default function HomeScreen({ navigation }) {
       await AsyncStorage.setItem('products', JSON.stringify(list))
       return true
     } catch (err) {
-      console.error('Ошибка при сохранении продуктов:', err)
-      setSaveError('Не удалось сохранить изменения. Пожалуйста, попробуйте снова.')
+      console.error('Error saving products:', err)
+      setSaveError('Failed to save changes. Please try again.')
       return false
     }
   }
@@ -76,7 +76,6 @@ export default function HomeScreen({ navigation }) {
     setProducts(updated)
     const success = await saveProducts(updated)
     if (!success) {
-      // Восстанавливаем предыдущее состояние, если сохранение не удалось
       setProducts(products)
     }
   }
@@ -87,11 +86,10 @@ export default function HomeScreen({ navigation }) {
       setProducts(updated)
       const success = await saveProducts(updated)
       if (!success) {
-        // Восстанавливаем предыдущее состояние, если сохранение не удалось
         setProducts(products)
       }
     } catch (err) {
-      Alert.alert('Ошибка', 'Не удалось удалить продукт. Пожалуйста, попробуйте снова.')
+      Alert.alert('Error', 'Failed to delete product. Please try again.')
     }
   }
 
@@ -122,14 +120,14 @@ export default function HomeScreen({ navigation }) {
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#0080ff" />
           <Text style={[styles.loadingText, { color: isDarkMode ? '#fff' : '#000' }]}>
-            Загрузка продуктов...
+            Loading products...
           </Text>
         </View>
       ) : error ? (
         <View style={styles.errorContainer}>
           <Text style={styles.errorText}>{error}</Text>
           <TouchableOpacity style={styles.retryButton} onPress={loadProducts}>
-            <Text style={styles.retryButtonText}>Повторить</Text>
+            <Text style={styles.retryButtonText}>Retry</Text>
           </TouchableOpacity>
         </View>
       ) : (
@@ -138,7 +136,7 @@ export default function HomeScreen({ navigation }) {
             <View style={styles.errorContainer}>
               <Text style={styles.errorText}>{saveError}</Text>
               <TouchableOpacity style={styles.retryButton} onPress={() => setSaveError(null)}>
-                <Text style={styles.retryButtonText}>Закрыть</Text>
+                <Text style={styles.retryButtonText}>Close</Text>
               </TouchableOpacity>
             </View>
           )}
@@ -203,7 +201,7 @@ export default function HomeScreen({ navigation }) {
                   setIsDarkMode(next)
                   await AsyncStorage.setItem('theme', JSON.stringify(next))
                 } catch (err) {
-                  Alert.alert('Ошибка', 'Не удалось сохранить настройки темы')
+                  Alert.alert('Error', 'Failed to save theme settings')
                 }
               }}
             >
@@ -236,7 +234,7 @@ export default function HomeScreen({ navigation }) {
                 await AsyncStorage.removeItem('isLoggedIn')
                 navigation.replace('Login')
               } catch (err) {
-                Alert.alert('Ошибка', 'Не удалось выйти из системы. Пожалуйста, попробуйте снова.')
+                Alert.alert('Error', 'Failed to log out. Please try again.')
               }
             }}
           >
