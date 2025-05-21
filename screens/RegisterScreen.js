@@ -3,26 +3,26 @@ import { View, TextInput, TouchableOpacity, Text, Alert } from 'react-native'
 import { AuthContext } from '../AuthContext'
 import styles from '../styles/styles'
 
-export default function LoginScreen({ navigation }) {
-  const { signIn } = useContext(AuthContext)
+export default function RegisterScreen({ navigation }) {
+  const { signUp } = useContext(AuthContext)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-  const handleLogin = async () => {
+  const handleRegister = async () => {
     if (!email.trim() || !password) {
       Alert.alert('Błąd', 'Proszę wypełnić wszystkie pola')
       return
     }
     try {
-      await signIn(email.trim(), password)
+      await signUp(email.trim(), password)
     } catch (e) {
-      Alert.alert('Błąd logowania', e.message)
+      Alert.alert('Błąd rejestracji', e.message)
     }
   }
 
   return (
     <View style={styles.container}>
-      <Text style={[styles.loginTitle, { marginBottom: 20 }]}>Logowanie</Text>
+      <Text style={[styles.loginTitle, { marginBottom: 20 }]}>Rejestracja</Text>
       <View style={styles.loginForm}>
         <TextInput
           style={styles.loginInput}
@@ -41,12 +41,12 @@ export default function LoginScreen({ navigation }) {
           value={password}
           onChangeText={setPassword}
         />
-        <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-          <Text style={styles.loginButtonText}>Zaloguj się</Text>
+        <TouchableOpacity style={styles.loginButton} onPress={handleRegister}>
+          <Text style={styles.loginButtonText}>Zarejestruj się</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={{ marginTop: 16 }} onPress={() => navigation.navigate('Register')}>
+        <TouchableOpacity style={{ marginTop: 16 }} onPress={() => navigation.navigate('Login')}>
           <Text style={styles.linkText}>
-            Nie masz konta? <Text style={{ fontWeight: 'bold' }}>Zarejestruj się</Text>
+            Masz już konto? <Text style={{ fontWeight: 'bold' }}>Zaloguj się</Text>
           </Text>
         </TouchableOpacity>
       </View>
